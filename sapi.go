@@ -21,6 +21,10 @@ func (p *Sapi) Plugin(name string) interface{} {
 	return p.plugins[name]
 }
 
+func (p *Sapi) Print(param ...interface{}) {
+	fmt.Fprint(p.Stdout, param...)
+}
+
 var FireFunc func(ctx context.Context, sapi *Sapi)
 
 func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sapi *Sapi)) {
