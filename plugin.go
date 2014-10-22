@@ -10,8 +10,8 @@ type PluginInfo struct {
 	Creater                   func() (interface{}, error)
 	HookPluginServerInit      func(ctx context.Context, server *Server) error
 	HookPluginServerShutdown  func(ctx context.Context, server *Server) error
-	HookPluginRequestInit     func(ctx context.Context, sapi *Sapi) error
-	HookPluginRequestShutdown func(ctx context.Context, sapi *Sapi) error
+	HookPluginRequestInit     func(ctx context.Context, sapi *Sapi, obj interface{}) error
+	HookPluginRequestShutdown func(ctx context.Context, sapi *Sapi, obj interface{}) error
 }
 
 var pluginMap map[string]PluginInfo
