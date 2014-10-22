@@ -14,7 +14,7 @@ type Sapi struct {
 
 	Ext interface{}
 
-	plugins map[string]interface{}
+	plugins map[string]PluginInfo
 }
 
 func (p *Sapi) Plugin(name string) interface{} {
