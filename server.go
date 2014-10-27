@@ -7,7 +7,13 @@ import (
 	"syscall"
 
 	"code.google.com/p/go.net/context"
+	
+	"github.com/erzha/econf"
+	"github.com/erzha/elog"
+	
 )
+
+var serverObj *Server
 
 var serverCtx context.Context
 var serverCancel context.CancelFunc
@@ -19,9 +25,9 @@ type ServerHandler interface {
 
 type Server struct {
 	Handler ServerHandler
-
 	PluginOrder []string
-
+	Conf *econf.Conf
+	Logger *elog.Logger
 	sigIntC		chan bool //接收SIG_INT信号，用于强制结束程序
 	sigIntCount int	//SIG_INT信号次数
 }
@@ -33,9 +39,14 @@ func newServer() *Server {
 }
 
 func Boot(handler ServerHandler) {
-	server := newServer()
-	server.Handler = handler
-	server.Boot()
+	
+	parseArgs()
+	
+	serverObj = newServer()
+	serverObj.Conf = initConf()
+	serverObj.Logger = initLogger(serverObj.Conf)
+	serverObj.Handler = handler
+	serverObj.Boot()
 }
 
 func (p *Server) Boot() {

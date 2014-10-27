@@ -11,10 +11,11 @@ type Sapi struct {
 	Stdin  io.Reader
 	Stdout io.Writer
 	Stderr io.Writer
-
+	
+	Server *Server
 	Ext interface{}
 
-	plugins map[string]PluginInfo
+	plugins map[string]interface{}
 }
 
 func (p *Sapi) Plugin(name string) interface{} {
@@ -41,4 +42,10 @@ func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sa
 		case <-ctx.Done():
 		case <-requestDone:
 	}
+}
+
+func NewSapi() *Sapi {
+	ret := &Sapi{}
+	ret.Server = serverObj
+	return ret
 }
