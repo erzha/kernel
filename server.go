@@ -49,6 +49,10 @@ func Boot(handler ServerHandler) {
 	serverObj.Boot()
 }
 
+func (p *Server) Basedir() string {
+	return *flagBasedir
+}
+
 func (p *Server) Boot() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
