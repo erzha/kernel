@@ -26,6 +26,10 @@ func (p *Sapi) Print(param ...interface{}) {
 	fmt.Fprint(p.Stdout, param...)
 }
 
+func (p *Sapi) Println(param ...interface{}) {
+	fmt.Fprintln(p.Stdout, param...)
+}
+
 var FireFunc func(ctx context.Context, sapi *Sapi)
 
 func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sapi *Sapi)) {
@@ -47,5 +51,6 @@ func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sa
 func NewSapi() *Sapi {
 	ret := &Sapi{}
 	ret.Server = serverObj
+	ret.plugins = make(map[string]interface{})
 	return ret
 }

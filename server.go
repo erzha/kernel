@@ -54,6 +54,7 @@ func (p *Server) Basedir() string {
 }
 
 func (p *Server) Boot() {
+	p.Logger.Debug("kernel_server_boot")
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	go p.handleControlSignal()
@@ -61,6 +62,7 @@ func (p *Server) Boot() {
 
 	chanHandlerDone := make(chan bool)
 	go func() {
+		p.Logger.Debug("kernel_server_boot_handler")
 		p.Handler.Serve(serverCtx, p)
 		close(chanHandlerDone)
 	}()

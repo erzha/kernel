@@ -23,9 +23,10 @@ func RegisterPlugin(name string, hookInfo PluginInfo) {
 }
 
 func serverInit(ctx context.Context, server *Server) {
-	for _, info := range pluginMap {
+	for key, info := range pluginMap {
 		if nil != info.ServerInit {
 			info.ServerInit(ctx, server)
+			serverObj.Logger.Sysf("server_init_done_%s", key)
 		}
 	}
 }
