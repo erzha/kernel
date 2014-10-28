@@ -33,8 +33,16 @@ func (p *Sapi) Println(param ...interface{}) {
 var FireFunc func(ctx context.Context, sapi *Sapi)
 
 func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sapi *Sapi)) {
-	requestDone := make(chan bool)
+	
+	/*
+	defer func() {
+		r := recover()
+		if nil!=r {
+			sapi.Server.Logger.Info(r)
+		}
+	}()*/
 
+	requestDone := make(chan bool)
 	go func() {
 		requestInit(ctx, sapi)
 		do(ctx, sapi)
