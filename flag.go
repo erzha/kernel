@@ -1,3 +1,7 @@
+// Copyright 2014 The erzha Authors. All rights reserved.
+// Use of this source code is governed by a MIT
+// license that can be found in the LICENSE file.
+
 package kernel
 
 
@@ -7,7 +11,7 @@ import (
 	"flag"
 	"github.com/erzha/econf"
 	"github.com/erzha/elog"
-	)
+)
 
 var flagBasedir *string
 var flagConffile *string

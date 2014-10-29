@@ -1,3 +1,7 @@
+// Copyright 2014 The erzha Authors. All rights reserved.
+// Use of this source code is governed by a MIT
+// license that can be found in the LICENSE file.
+
 package kernel
 
 import (
@@ -28,8 +32,8 @@ type Server struct {
 	PluginOrder []string
 	Conf *econf.Conf
 	Logger *elog.Logger
-	sigIntC		chan bool //接收SIG_INT信号，用于强制结束程序
-	sigIntCount int	//SIG_INT信号次数
+	sigIntC		chan bool //recv sigint sigkill to kill process
+	sigIntCount int
 }
 
 func newServer() *Server {

@@ -1,3 +1,7 @@
+// Copyright 2014 The erzha Authors. All rights reserved.
+// Use of this source code is governed by a MIT
+// license that can be found in the LICENSE file.
+
 package kernel
 
 import (
@@ -34,20 +38,21 @@ var FireFunc func(ctx context.Context, sapi *Sapi)
 
 func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sapi *Sapi)) {
 	
-	/*
-	defer func() {
-		r := recover()
-		if nil!=r {
-			sapi.Server.Logger.Info(r)
-		}
-	}()*/
+	
 
 	requestDone := make(chan bool)
 	go func() {
+		defer func() {
+			close(requestDone)
+			r := recover()
+			if nil!=r {
+				sapi.Server.Logger.Info("panic occured", r)
+			}
+		}()
+		
 		requestInit(ctx, sapi)
 		do(ctx, sapi)
 		requestShutdown(ctx, sapi)
-		close(requestDone)
 	}()
 
 	select {
