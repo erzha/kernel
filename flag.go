@@ -97,4 +97,4 @@ func initLogger(conf *econf.Conf) *elog.Logger {
 
 func init() {
 	setMainFlags()
-	}
+}

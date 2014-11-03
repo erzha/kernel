@@ -10,8 +10,23 @@ import (
 	"code.google.com/p/go.net/context"
 )
 
+
+/*
+Plugin is used to make erzha's function extended handily
+
+
+Creater will be called when a request arrive and before the user defined action.
+the kernel will get a instance of the plugin and calls it's RequestInit method before the user defined action and calls it's
+RequestShutdown method when user defined action ended.
+
+in action, we can use the kernel.Sapi instance with the request to get the plugin's instance, for ex:
+
+	func Execute(ctx context.Context, sapi *http.Sapi) {
+		pluginSessionInstance := sapi.Kernel.Plugin("session").(session.*Session)
+	}
+*/
 type PluginInfo struct {
-	Creater                   func() (interface{}, error)
+	Creater			func() (interface{}, error)
 	ServerInit      func(ctx context.Context, server *Server) error
 	ServerShutdown  func(ctx context.Context, server *Server) error
 	RequestInit     func(ctx context.Context, sapi *Sapi, obj interface{}) error
@@ -19,8 +34,9 @@ type PluginInfo struct {
 }
 
 var pluginMap map[string]PluginInfo
-var PluginJump = errors.New("kernel plugin jump  here")
-var PluginStop = errors.New("kernel plugin return here")
+
+//If it's returned after a plugin's RequestInit/Shutdown method, the request will be ended directly
+var PluginStop = errors.New("kernel plugin stop here")
 
 func RegisterPlugin(name string, hookInfo PluginInfo) {
 	pluginMap[name] = hookInfo
@@ -43,7 +59,7 @@ func serverShutdown(ctx context.Context, server *Server) {
 	}
 }
 
-func requestInit(ctx context.Context, sapi *Sapi) {
+func requestInit(ctx context.Context, sapi *Sapi) error {
 	for name, info := range pluginMap {
 		if nil == info.Creater {
 			continue
@@ -56,8 +72,11 @@ func requestInit(ctx context.Context, sapi *Sapi) {
 		sapi.plugins[name] = obj
 
 		if nil != info.RequestInit {
-			info.RequestInit(ctx, sapi, obj)
+			if PluginStop == info.RequestInit(ctx, sapi, obj) {
+				return PluginStop
+			}
 		}
+		return nil
 	}
 }
 

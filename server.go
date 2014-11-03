@@ -26,10 +26,8 @@ type ServerHandler interface {
 	Serve(ctx context.Context, p *Server)
 }
 
-
 type Server struct {
 	Handler ServerHandler
-	PluginOrder []string
 	Conf *econf.Conf
 	Logger *elog.Logger
 	sigIntC		chan bool //recv sigint sigkill to kill process
@@ -66,9 +64,10 @@ func (p *Server) Boot() {
 
 	chanHandlerDone := make(chan bool)
 	go func() {
+		defer close(chanHandlerDone)
+
 		p.Logger.Debug("kernel_server_boot_handler")
 		p.Handler.Serve(serverCtx, p)
-		close(chanHandlerDone)
 	}()
 
 	select {

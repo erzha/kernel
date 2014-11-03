@@ -34,11 +34,10 @@ func (p *Sapi) Println(param ...interface{}) {
 	fmt.Fprintln(p.Stdout, param...)
 }
 
+//The func type for Kernel.Sapi to call the user defined logic
 var FireFunc func(ctx context.Context, sapi *Sapi)
 
 func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sapi *Sapi)) {
-	
-	
 
 	requestDone := make(chan bool)
 	go func() {
@@ -50,7 +49,10 @@ func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sa
 			}
 		}()
 		
-		requestInit(ctx, sapi)
+		if PluginStop == requestInit(ctx, sapi) {
+			return
+		}
+
 		do(ctx, sapi)
 		requestShutdown(ctx, sapi)
 	}()
