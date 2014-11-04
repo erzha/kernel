@@ -11,11 +11,28 @@ import (
 	"code.google.com/p/go.net/context"
 )
 
+/*
+Sapi represent the request in network application model.
+
+this Sapi is the kernel Sapi, the diy server may have self sapi struct, but it must have a member named Kernel pointed to the *Kernel.Sapi.
+
+for ex:
+
+	//github.com/erzha/http/server
+	package server
+	import "kernel"
+
+	type Sapi struct {
+		Kernel *kernel.Sapi
+	}
+
+
+
+*/
 type Sapi struct {
 	Stdin  io.Reader
 	Stdout io.Writer
 	Stderr io.Writer
-	
 	Server *Server
 	Ext interface{}
 
