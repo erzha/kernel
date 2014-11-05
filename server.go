@@ -11,10 +11,9 @@ import (
 	"syscall"
 
 	"code.google.com/p/go.net/context"
-	
+
 	"github.com/erzha/econf"
 	"github.com/erzha/elog"
-	
 )
 
 var serverObj *Server
@@ -41,9 +40,9 @@ func newServer() *Server {
 }
 
 func Boot(handler ServerHandler) {
-	
+
 	parseArgs()
-	
+
 	serverObj = newServer()
 	serverObj.Conf = initConf()
 	serverObj.Logger = initLogger(serverObj.Conf)
