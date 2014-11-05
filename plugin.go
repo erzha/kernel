@@ -72,11 +72,16 @@ func requestInit(ctx context.Context, sapi *Sapi) error {
 		sapi.plugins[name] = obj
 
 		if nil != info.RequestInit {
-			if PluginStop == info.RequestInit(ctx, sapi, obj) {
-				return PluginStop
+			err := info.RequestInit(ctx, sapi, obj)
+			switch err {
+				case PluginStop:
+					return PluginStop
+				case nil:
+				default:
+					sapi.Server.Logger.Warning("request_init_error plugin:%s err:%s", name, err.Error())
+					return err //if err != PluginStop, the request will alive to continue rather than dead
 			}
 		}
-		return nil
 	}
 	return nil
 }
