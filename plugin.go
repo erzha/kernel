@@ -78,6 +78,7 @@ func requestInit(ctx context.Context, sapi *Sapi) error {
 		}
 		return nil
 	}
+	return nil
 }
 
 func requestShutdown(ctx context.Context, sapi *Sapi) {
