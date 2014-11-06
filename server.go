@@ -6,7 +6,9 @@ package kernel
 
 import (
 	"os"
+	"fmt"
 	"runtime"
+	"time"
 	"os/signal"
 	"syscall"
 
@@ -47,6 +49,18 @@ func Boot(handler ServerHandler) {
 	serverObj.Conf = initConf()
 	serverObj.Logger = initLogger(serverObj.Conf)
 	serverObj.Handler = handler
+
+	//init time location
+	var err error
+	var timezone string
+
+	timezone = serverObj.Conf.String("erzha.default.timezone", "Asia/Shanghai")
+	time.Local, err = time.LoadLocation(timezone)
+	if nil != err {
+		fmt.Println("timezone error: timezone:%s err:%s", timezone, err.Error())
+		return
+	}
+
 	serverObj.Boot()
 }
 
