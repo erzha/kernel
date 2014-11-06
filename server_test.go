@@ -6,7 +6,7 @@ package kernel
 
 import (
 	"testing"
-	"code.google.com/p/go.net/context"
+	"golang.org/x/net/context"
 )
 
 type handler struct {

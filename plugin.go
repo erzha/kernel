@@ -7,7 +7,7 @@ package kernel
 import (
 	"errors"
 
-	"code.google.com/p/go.net/context"
+	"golang.org/x/net/context"
 )
 
 
