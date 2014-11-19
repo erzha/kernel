@@ -69,7 +69,7 @@ func (p *Server) Basedir() string {
 }
 
 func (p *Server) Boot() {
-	p.Logger.Debug("kernel_server_boot")
+	p.Logger.Sys("kernel_server_boot")
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	go p.handleControlSignal()
@@ -89,6 +89,7 @@ func (p *Server) Boot() {
 	}
 
 	serverShutdown(serverCtx, p)
+	p.Logger.Sys("kernel_server_exit")
 }
 
 func (p *Server) handleControlSignal() {
@@ -99,6 +100,7 @@ func (p *Server) handleControlSignal() {
 		s := <-c
 		switch s {
 		case syscall.SIGINT:
+			p.Logger.Sys("recv signal SIGINT, close server now")
 			serverCancel()
 		}
 	}
