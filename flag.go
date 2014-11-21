@@ -62,13 +62,13 @@ func initConf() *econf.Conf {
 	confFile = *flagConffile
 	pConf = econf.NewConf()
 	fi, err = os.Stat(*flagConffile)
-	if (nil!=err && err == os.ErrNotExist) || fi.IsDir() {
+	if (nil!=err && err == os.ErrNotExist) || (nil!=fi && fi.IsDir()) {
 		confFile = *flagBasedir + "/conf/" + *flagConffile
 	}
 	
 	err = pConf.ParseFile(confFile)
 	if nil != err {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, "open conf file error: ", err)
 		os.Exit(-1)
 	}
 	return pConf
