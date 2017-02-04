@@ -4,13 +4,12 @@
 
 package kernel
 
-
 import (
-	"fmt"
-	"os"
 	"flag"
+	"fmt"
 	"github.com/erzha/econf"
 	"github.com/erzha/elog"
+	"os"
 )
 
 var flagBasedir *string
@@ -18,7 +17,7 @@ var flagConffile *string
 
 //set the main flags for all kinds of servers
 func setMainFlags() {
-	flagBasedir	 = flag.String("basedir", "", "set the basedir, the $(pwd) is default")
+	flagBasedir = flag.String("basedir", "", "set the basedir, the $(pwd) is default")
 	flagConffile = flag.String("conf", "erzha.ini", "$basedir/conf/erzha.ini is the default.")
 }
 
@@ -26,7 +25,7 @@ func parseArgs() {
 	if flag.Parsed() {
 		return
 	}
-	
+
 	flag.Usage = printHelpInfo
 	flag.Parse()
 
@@ -52,20 +51,19 @@ func printHelpInfo() {
 	fmt.Fprintf(os.Stderr, "\n")
 }
 
-
 func initConf() *econf.Conf {
 	var confFile string
 	var pConf *econf.Conf
 	var err error
 	var fi os.FileInfo
-	
+
 	confFile = *flagConffile
 	pConf = econf.NewConf()
 	fi, err = os.Stat(*flagConffile)
-	if (nil!=err && err == os.ErrNotExist) || (nil!=fi && fi.IsDir()) {
+	if (nil != err && err == os.ErrNotExist) || (nil != fi && fi.IsDir()) {
 		confFile = *flagBasedir + "/conf/" + *flagConffile
 	}
-	
+
 	err = pConf.ParseFile(confFile)
 	if nil != err {
 		fmt.Fprintln(os.Stderr, "open conf file error: ", err)
@@ -76,10 +74,10 @@ func initConf() *econf.Conf {
 
 func initLogger(conf *econf.Conf) *elog.Logger {
 	logger := elog.NewLogger()
-	
+
 	level := conf.String(Conf_key_erzha_log_level, "info")
 	logger.SetMinLogLevelByName(level)
-	
+
 	outFile := conf.String(Conf_key_erzha_log_file, "")
 	writer := os.Stdout
 	if "" != outFile {
@@ -89,9 +87,9 @@ func initLogger(conf *econf.Conf) *elog.Logger {
 		}
 		writer = f
 	}
-	
+
 	logger.SetLogWriter(writer)
-	
+
 	return logger
 }
 

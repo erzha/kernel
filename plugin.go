@@ -7,9 +7,8 @@ package kernel
 import (
 	"errors"
 
-	"golang.org/x/net/context"
+	"context"
 )
-
 
 /*
 Plugin is used to make erzha's function extended handily
@@ -26,7 +25,7 @@ in action, we can use the kernel.Sapi instance with the request to get the plugi
 	}
 */
 type PluginInfo struct {
-	Creater			func() (interface{}, error)
+	Creater         func() (interface{}, error)
 	ServerInit      func(ctx context.Context, server *Server) error
 	ServerShutdown  func(ctx context.Context, server *Server) error
 	RequestInit     func(ctx context.Context, sapi *Sapi, obj interface{}) error
@@ -74,12 +73,12 @@ func requestInit(ctx context.Context, sapi *Sapi) error {
 		if nil != info.RequestInit {
 			err := info.RequestInit(ctx, sapi, obj)
 			switch err {
-				case PluginStop:
-					return PluginStop
-				case nil:
-				default:
-					sapi.Server.Logger.Warning("request_init_error plugin:%s err:%s", name, err.Error())
-					return err //if err != PluginStop, the request will alive to continue rather than dead
+			case PluginStop:
+				return PluginStop
+			case nil:
+			default:
+				sapi.Server.Logger.Warning("request_init_error plugin:%s err:%s", name, err.Error())
+				return err //if err != PluginStop, the request will alive to continue rather than dead
 			}
 		}
 	}
@@ -99,4 +98,3 @@ func requestShutdown(ctx context.Context, sapi *Sapi) {
 func init() {
 	pluginMap = make(map[string]PluginInfo)
 }
-

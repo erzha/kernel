@@ -5,12 +5,11 @@
 package kernel
 
 import (
+	"context"
 	"testing"
-	"golang.org/x/net/context"
 )
 
 type handler struct {
-
 }
 
 func (h *handler) Serve(ctx context.Context, p *Server) {

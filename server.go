@@ -5,14 +5,14 @@
 package kernel
 
 import (
-	"os"
 	"fmt"
-	"runtime"
-	"time"
+	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
+	"time"
 
-	"golang.org/x/net/context"
+	"context"
 
 	"github.com/erzha/econf"
 	"github.com/erzha/elog"
@@ -28,10 +28,10 @@ type ServerHandler interface {
 }
 
 type Server struct {
-	Handler ServerHandler
-	Conf *econf.Conf
-	Logger *elog.Logger
-	sigIntC		chan bool //recv sigint sigkill to kill process
+	Handler     ServerHandler
+	Conf        *econf.Conf
+	Logger      *elog.Logger
+	sigIntC     chan bool //recv sigint sigkill to kill process
 	sigIntCount int
 }
 
@@ -84,8 +84,8 @@ func (p *Server) Boot() {
 	}()
 
 	select {
-		case <-chanHandlerDone:
-		case <-serverCtx.Done():
+	case <-chanHandlerDone:
+	case <-serverCtx.Done():
 	}
 
 	serverShutdown(serverCtx, p)

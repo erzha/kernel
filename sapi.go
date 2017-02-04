@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"io"
 
-	"golang.org/x/net/context"
+	"context"
 )
 
 /*
@@ -34,7 +34,7 @@ type Sapi struct {
 	Stdout io.Writer
 	Stderr io.Writer
 	Server *Server
-	Ext interface{}
+	Ext    interface{}
 
 	plugins map[string]interface{}
 }
@@ -61,11 +61,11 @@ func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sa
 		defer func() {
 			close(requestDone)
 			r := recover()
-			if nil!=r {
+			if nil != r {
 				sapi.Server.Logger.Info("panic occured", r)
 			}
 		}()
-		
+
 		if PluginStop == requestInit(ctx, sapi) {
 			return
 		}
@@ -75,8 +75,8 @@ func FireAction(ctx context.Context, sapi *Sapi, do func(ctx context.Context, sa
 	}()
 
 	select {
-		case <-ctx.Done():
-		case <-requestDone:
+	case <-ctx.Done():
+	case <-requestDone:
 	}
 }
 
